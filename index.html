@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fishing Spots</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background:#96BBBB;
+  }
+
+  .frame {
+    position: relative;
+    width: 80vmin;
+    height: 80vmin;
+    margin: 80px auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    box-shadow:
+      0 0 0 6px #414535,
+      0 0 0 12px #F2E3BC,
+      0 0 0 18px #618985;
+  }
+
+  #map {
+    height:100%;
+    width:100%;
+  }
+
+  .logo {
+    position:absolute;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:2000;
+  }
+
+  .logo img{
+    max-width:180px;
+    height:auto;
+    display:block;
+  }
+
+  .panel {
+    position:absolute;
+    top:10px;
+    right:10px;
+    z-index:1000;
+
+    background:#618985;
+    color:#fff;
+    padding:10px;
+    border-radius:8px;
+  }
+
+  button{
+    margin:2px;
+    cursor:pointer;
+  }
+
+  /* INFO BUTTON */
+  .info-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 3000;
+
+    background: #414535;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .info-btn:hover {
+    background: #2f3227;
+  }
+
+</style>
+</head>
+
+<body>
+
+<div class="logo">
+  <img src="Assets/logo2.png" alt="logo">
+</div>
+
+<a href="info.html" class="info-btn">ℹ Info</a>
+
+<div class="frame">
+
+  <div class="panel">
+    <strong>Add spot</strong><br>
+    <button onclick="mode='good'">🐟 Good</button>
+    <button onclick="mode='bad'">❌ Bad</button>
+  </div>
+
+  <div id="map"></div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+const center = [53.4, -8];
+const zoomLevel = 7;
+
+const bounds = L.latLngBounds(
+  [51.3, -11],
+  [55.5, -5]
+);
+
+const map = L.map('map', {
+  minZoom: 6,
+  maxZoom: 12,
+  maxBounds: bounds,
+  maxBoundsViscosity: 1
+}).setView(center, zoomLevel);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18
+}).addTo(map);
+
+let mode = "good";
+
+let spots = JSON.parse(localStorage.getItem("spots") || "[]");
+let votes = JSON.parse(localStorage.getItem("votes") || "{}");
+
+function inside(latlng) {
+  return bounds.contains(latlng);
+}
+
+function save() {
+  localStorage.setItem("spots", JSON.stringify(spots));
+  localStorage.setItem("votes", JSON.stringify(votes));
+}
+
+function drawSpot(p) {
+  const color = p.type === "good" ? "green" : "red";
+
+  const marker = L.circleMarker([p.lat, p.lng], {
+    color: color,
+    radius: 8
+  }).addTo(map);
+
+  const voted = votes[p.id];
+
+  marker.bindPopup(`
+      <b>${p.type === "good" ? "🐟 Good spot" : "❌ No fish"}</b><br><br>
+      👍 ${p.likes} | 👎 ${p.dislikes}<br><br>
+
+      <button onclick="vote(${p.id}, 'up')" ${voted ? "disabled" : ""}>👍</button>
+      <button onclick="vote(${p.id}, 'down')" ${voted ? "disabled" : ""}>👎</button>
+
+      ${voted ? "<br><small>already voted</small>" : ""}
+  `);
+}
+
+function redraw() {
+  map.eachLayer(layer => {
+    if (layer instanceof L.CircleMarker) {
+      map.removeLayer(layer);
+    }
+  });
+
+  spots.forEach(drawSpot);
+}
+
+function vote(id, type) {
+  if (votes[id]) return;
+
+  const p = spots.find(s => s.id === id);
+  if (!p) return;
+
+  if (type === "up") {
+    p.likes++;
+  } else {
+    p.dislikes++;
+  }
+
+  votes[id] = Date.now();
+
+  save();
+  redraw();
+}
+
+map.on('click', e => {
+  if (!inside(e.latlng)) return;
+
+  const point = {
+    id: Date.now(),
+    lat: e.latlng.lat,
+    lng: e.latlng.lng,
+    type: mode,
+    likes: 0,
+    dislikes: 0
+  };
+
+  spots.push(point);
+  save();
+  drawSpot(point);
+});
+
+spots.forEach(drawSpot);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Info</title>
+
+<style>
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background:#96BBBB;
+    color:#414535;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 60px auto;
+    background: #F2E3BC;
+    padding: 30px;
+    border-radius: 12px;
+
+    box-shadow:
+      0 0 0 6px #414535,
+      0 0 0 12px #F2E3BC,
+      0 0 0 18px #618985;
+  }
+
+  h1 {
+    margin-top: 0;
+    text-align: center;
+  }
+
+  p {
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #414535;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    z-index: 1000;
+  }
+
+  .back-btn:hover {
+    background: #2f3227;
+  }
+
+  .gallery {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .gallery img {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+</style>
+</head>
+
+<body>
+
+<a href="index.html" class="back-btn">← Back</a>
+
+<div class="container">
+
+<h1>About FishRadar</h1>
+
+<p>
+This map was created for people who enjoy fishing and want to keep track of places where they’ve had good or bad experiences. Fishing is not always predictable sometimes you find an amazing spot where fish are biting constantly, and other times you spend hours without a single catch. This map is a simple way to remember those moments and share them visually.
+</p>
+
+<p>
+You can mark locations where you had success, as well as places that didn’t work out. Over time, this helps build a clearer picture of which areas are worth visiting again and which ones might not be. It’s also interesting to look back and see patterns maybe certain regions are better during specific seasons, or maybe some spots just never deliver.
+</p>
+
+<p>
+The idea is not only about tracking success, but also about the experience itself. Fishing is often about patience, nature, and spending time outdoors. Even a “bad” spot can still be a good memory a quiet place, a nice view, or just time spent relaxing.
+</p>
+
+<p>
+Everything on this map is simple and personal. The data is stored locally, which means it belongs only to you. It’s like your own small fishing journal, but visual and interactive. You can come back anytime, add new places, and slowly build your own map of experiences.
+</p>
+
+<p>
+In the future, this idea could grow into something bigger a shared map where people exchange knowledge, tips, and stories. But even in its current form, it’s a small tool for keeping track of your fishing journey.
+</p>
+
+<p>
+Below you can see moments of success people who found the right place, at the right time, and managed to catch something worth remembering.
+</p>
+
+<div class="gallery">
+  <img src="Assets/fish1.png" alt="">
+  <img src="Assets/fish2.png" alt="">
+  <img src="Assets/fish3.png" alt="">
+</div>
+
+</div>
+
+</body>
+</html>
